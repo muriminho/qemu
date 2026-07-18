@@ -274,6 +274,24 @@ config VEXPRESS
     select SII9022
     select VIRTIO_MMIO
 
+config RAT
+    bool
+    default y
+    depends on TCG && ARM
+    select DEVICE_TREE
+    select A9MPCORE
+    select A15MPCORE
+    select ARM_MPTIMER
+    select ARM_TIMER # sp804
+    select LAN9118
+    select PFLASH_CFI01
+    select PL011 # UART
+    select PL041 # audio codec
+    select PL181  # display
+    select REALVIEW
+    select SII9022
+    select VIRTIO_MMIO
+
 config ZYNQ
     bool
     default y
