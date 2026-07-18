@@ -38,7 +38,7 @@
 #include "system/device_tree.h"
 #include "qemu/error-report.h"
 #include <libfdt.h>
-#include "hw/char/pl011.h"
+#include "hw/char/ratchar.h"
 #include "hw/cpu/a9mpcore.h"
 #include "hw/cpu/a15mpcore.h"
 #include "hw/i2c/arm_sbcon_i2c.h"
@@ -540,7 +540,7 @@ static void vexpress_common_init(MachineState *machine)
                                &error_fatal);
     }
 
-    pl011_create(map[VE_UART], pic[5], serial_hd(0));
+    ratchar_create(map[VE_UART], pic[5], serial_hd(0));
 
     sysbus_create_simple("sp804", map[VE_TIMER01], pic[2]);
     sysbus_create_simple("sp804", map[VE_TIMER23], pic[3]);

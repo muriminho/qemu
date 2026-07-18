@@ -285,7 +285,7 @@ config RAT
     select ARM_TIMER # sp804
     select LAN9118
     select PFLASH_CFI01
-    select PL011 # UART
+    select RATCHAR # UART
     select PL041 # audio codec
     select PL181  # display
     select REALVIEW

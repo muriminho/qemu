@@ -18,6 +18,13 @@ config PL011
 config PL011_C
     bool
 
+config RATCHAR
+    bool
+    select RATCHAR_C
+
+config RATCHAR_C
+    bool
+
 config SERIAL
     bool
 
