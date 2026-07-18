@@ -546,9 +546,6 @@ static void vexpress_common_init(MachineState *machine)
                                &error_fatal);
     }
 
-    sysbus_create_simple("pl050_keyboard", map[VE_KMI0], pic[12]);
-    sysbus_create_simple("pl050_mouse", map[VE_KMI1], pic[13]);
-
     pl011_create(map[VE_UART], pic[5], serial_hd(0));
 
     sysbus_create_simple("sp804", map[VE_TIMER01], pic[2]);
