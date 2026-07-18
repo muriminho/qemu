@@ -69,10 +69,7 @@ enum {
     VE_MMCI,
     VE_KMI0,
     VE_KMI1,
-    VE_UART0,
-    VE_UART1,
-    VE_UART2,
-    VE_UART3,
+    VE_UART,
     VE_WDT,
     VE_TIMER01,
     VE_TIMER23,
@@ -100,10 +97,7 @@ static hwaddr motherboard_legacy_map[] = {
     [VE_MMCI] = 0x10005000,
     [VE_KMI0] = 0x10006000,
     [VE_KMI1] = 0x10007000,
-    [VE_UART0] = 0x10009000,
-    [VE_UART1] = 0x1000a000,
-    [VE_UART2] = 0x1000b000,
-    [VE_UART3] = 0x1000c000,
+    [VE_UART] = 0x10009000,
     [VE_WDT] = 0x1000f000,
     [VE_TIMER01] = 0x10011000,
     [VE_TIMER23] = 0x10012000,
@@ -145,10 +139,7 @@ static hwaddr motherboard_aseries_map[] = {
     [VE_MMCI] = 0x1c050000,
     [VE_KMI0] = 0x1c060000,
     [VE_KMI1] = 0x1c070000,
-    [VE_UART0] = 0x1c090000,
-    [VE_UART1] = 0x1c0a0000,
-    [VE_UART2] = 0x1c0b0000,
-    [VE_UART3] = 0x1c0c0000,
+    [VE_UART] = 0x1c090000,
     [VE_WDT] = 0x1c0f0000,
     [VE_TIMER01] = 0x1c110000,
     [VE_TIMER23] = 0x1c120000,
@@ -558,10 +549,7 @@ static void vexpress_common_init(MachineState *machine)
     sysbus_create_simple("pl050_keyboard", map[VE_KMI0], pic[12]);
     sysbus_create_simple("pl050_mouse", map[VE_KMI1], pic[13]);
 
-    pl011_create(map[VE_UART0], pic[5], serial_hd(0));
-    pl011_create(map[VE_UART1], pic[6], serial_hd(1));
-    pl011_create(map[VE_UART2], pic[7], serial_hd(2));
-    pl011_create(map[VE_UART3], pic[8], serial_hd(3));
+    pl011_create(map[VE_UART], pic[5], serial_hd(0));
 
     sysbus_create_simple("sp804", map[VE_TIMER01], pic[2]);
     sysbus_create_simple("sp804", map[VE_TIMER23], pic[3]);
