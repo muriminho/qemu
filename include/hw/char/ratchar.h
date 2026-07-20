@@ -15,18 +15,55 @@
 #ifndef HW_RATCHAR_H
 #define HW_RATCHAR_H
 
-#include "hw/core/sysbus.h"
 #include "chardev/char-fe.h"
+#include "hw/core/sysbus.h"
 #include "qom/object.h"
 
 #define TYPE_RATCHAR "ratchar"
 OBJECT_DECLARE_SIMPLE_TYPE(RatcharState, RATCHAR)
 
-struct RatcharState {
-    SysBusDevice parent_obj;
-    MemoryRegion iomem;
+#define RATCHAR_FIFO_DEPTH 8
 
-    CharFrontend chr;
+struct RatcharFIFO {
+  uint8_t buf[RATCHAR_FIFO_DEPTH];
+  uint8_t head;
+  uint8_t tail;
+  uint8_t count;
+};
+
+enum { RATCHAR_IRQ_RX, RATCHAR_IRQ_ERROR,RATCHAR_IRQ_COMBO, RATCHAR_IRQ_COUNT };
+
+struct RatcharState {
+  SysBusDevice parent_obj;
+  MemoryRegion iomem;
+
+  CharFrontend chr;
+  qemu_irq irq[RATCHAR_IRQ_COUNT];
+  struct RatcharFIFO rx;
+
+  union {
+    __attribute__((packed)) struct {
+      uint32_t rx_avail : 1;
+      uint32_t rx_irq_pending : 1;
+      uint32_t rx_overrun : 1;
+      uint32_t rx_overrun_irq_pending: 1;
+      uint32_t combined_irq_pendig: 1;
+    } bits;
+    uint32_t u32;
+  } status;
+
+  union {
+    __attribute__((packed)) struct {
+      uint32_t tx_on : 1;
+      uint32_t rx_on : 1;
+      uint32_t rx_irq_on : 1;
+      uint32_t rx_overrun_irq_on : 1;
+      uint32_t rx_clear_irq : 1;
+      uint32_t rx_clear_error : 1;
+      uint32_t rx_clear_error_irq : 1;
+    } bits;
+    uint32_t u32;
+  } ctrl;
 };
 
 DeviceState *ratchar_create(hwaddr addr, qemu_irq irq, Chardev *chr);
