@@ -50,6 +50,8 @@ static void ratchar_fifo_push(struct RatcharFIFO *r, uint8_t c) {
   r->buf[r->tail++] = c;
   r->tail &= 0b111;
   r->count++;
+
+  // g_printf("push tail %d count %d\n", r->tail, r->count);
 }
 
 static uint8_t ratchar_fifo_pop(struct RatcharFIFO *r) {
@@ -59,10 +61,11 @@ static uint8_t ratchar_fifo_pop(struct RatcharFIFO *r) {
     // TODO
     res = 0;
   } else {
-    res = r->buf[r->head];
+    res = r->buf[r->head++];
     r->head &= 0b111;
     r->count--;
   }
+  // g_printf("pop head %d count %d\n", r->head, r->count);
 
   return res;
 }
@@ -116,6 +119,7 @@ static void ratchar_fifo_rx_put(RatcharState *r, uint8_t c) {
     return;
   }
 
+  // g_printf("byte %c\n", c);
   ratchar_fifo_push(&r->rx, c);
 }
 
@@ -129,7 +133,7 @@ static uint8_t ratchar_rx_receive(RatcharState *r) {
 }
 
 static void ratchar_transmit(RatcharState *r, uint8_t c) {
-  // g_printf("TX: %c\n", c);g_printf("TX: %c\n", c);
+  // g_printf("TX: %c\n", c);
   if (r->ctrl.bits.tx_on)
     qemu_chr_fe_write_all(&r->chr, &c, 1);
 }
@@ -141,6 +145,7 @@ static uint64_t ratchar_read(void *obj, hwaddr addr, uint32_t size) {
 
   rs = RATCHAR(obj);
   offset = addr >> 2;
+  // g_print("read offt: %lu\n", offset);
   switch (offset) {
   case 0:
     r = ratchar_rx_receive(rs);
@@ -166,6 +171,7 @@ static void ratchar_write(void *obj, hwaddr addr, uint64_t data,
   hwaddr offset;
 
   offset = addr >> 2;
+  // g_print("Write offt: %lu data %x\n", offset, (uint32_t)data);
   switch (offset) {
   case 0:
     ratchar_transmit(rs, (uint8_t)data);
